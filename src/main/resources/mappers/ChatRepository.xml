@@ -2,11 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grepp.spring_practice.model.repository.ChatRepository">
 
-    <insert id="insertChat">
+    <insert id="insertChat" useGeneratedKeys="true" keyColumn="chat_no" keyProperty="chatNo">
         INSERT INTO chat(user_no, chat_room_no, chat_text) VALUES (#{userNo}, #{chatRoomNo}, #{chatText})
     </insert>
     <select id="selectChatbyChatRoomId" resultMap="r">
-        SELECT chat.chat_no, chat.user_no, chat.chat_room_no, chat.chat_text, chat.created_at from chat
+        SELECT chat.chat_no, chat.user_no, chat.chat_room_no, chat.chat_text, chat.created_at, f.file_no, f.original_name, f.saved_path
+        from chat left join talk.file f on chat.chat_no = f.chat_no
         where chat_room_no = #{chatRoomNo}
     </select>
 
@@ -16,5 +17,10 @@
         <result property="chatRoomNo" column="chat_room_no"/>
         <result property="userNo" column="user_no"/>
         <result property="chatText" column="chat_text"/>
+        <collection property="fileDTOList" ofType="com.grepp.spring_practice.model.dto.FileDTO">
+            <result column="file_no" property="fileNo"/>
+            <result column="saved_path" property="savedPath"/>
+            <result column="original_name" property="originalName"/>
+        </collection>
     </resultMap>
 </mapper>

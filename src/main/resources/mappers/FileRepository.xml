@@ -2,4 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grepp.spring_practice.model.repository.FileRepository">
 
+    <insert id="insertFiles">
+        INSERT Into file
+        (file_no, chat_no, original_name, saved_path)
+        value
+        <foreach collection="fileDTOList" item="fileDTO" separator=",">
+            (#{fileDTO.fileNo}, #{fileDTO.chatNo}, #{fileDTO.originalName}, #{fileDTO.savedPath})
+        </foreach>
+    </insert>
+    <select id="selectFiles" resultType="com.grepp.spring_practice.model.dto.FileDTO">
+        SELECT file_no, chat_no, original_name, saved_path from file
+        where chat_no=#{chatNo}
+    </select>
+    <select id="selectFile" resultType="com.grepp.spring_practice.model.dto.FileDTO">
+        SELECT file_no, chat_no, original_name, saved_path from file
+        where file_no=#{fileNo}
+    </select>
 </mapper>

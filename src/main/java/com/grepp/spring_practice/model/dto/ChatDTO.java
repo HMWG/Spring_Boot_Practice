@@ -3,6 +3,7 @@ package com.grepp.spring_practice.model.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +16,5 @@ public class ChatDTO {
     private int chatRoomNo;
     private String chatText;
     private LocalDateTime createdAt;
+    private List<FileDTO> fileDTOList;
 }

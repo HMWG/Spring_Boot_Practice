@@ -1,6 +1,7 @@
 <%@ page import="com.grepp.spring_practice.model.dto.ChatRoomDTO" %>
 <%@ page import="com.grepp.spring_practice.model.dto.ChatDTO" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.grepp.spring_practice.model.dto.FileDTO" %><%--
   Created by IntelliJ IDEA.
   User: 관리자
   Date: 2024-08-20
@@ -52,7 +53,21 @@
         </td>
         <td>
             내용 : <%=c.getChatText()%>
+        </td><%
+        if(c.getFileDTOList() != null && !c.getFileDTOList().isEmpty()){
+    %>
+        <td>
+            <%
+                for (FileDTO fileDTO : c.getFileDTOList()) {
+            %>
+            <a href="<%=request.getContextPath()%>/chatting/download?fileNo=<%=fileDTO.getFileNo()%>">첨부파일 : <%=fileDTO.getOriginalName()%></a><br>
+            <%
+                }
+            %>
         </td>
+    <%
+        }
+    %>
     </tr>
             <%
             }
@@ -61,10 +76,36 @@
         }
     %>
 </table>
-<form action="<%=request.getContextPath()%>/chatting/<%=chatRoomDTO.getChatRoomNo()%>" method="post">
+<form action="<%=request.getContextPath()%>/chatting/<%=chatRoomDTO.getChatRoomNo()%>" method="post" enctype="multipart/form-data">
     채팅하기 <input type="text" name="message"/>
-    <input type="submit" value="전송">
+    <input type="submit" value="전송"><br>
+    <button id="btnAddFile">파일 추가</button>
+    <div id="divFiles">
+
+    </div>
 </form>
+<script>
+    document.getElementById('btnAddFile').onclick = function (){
+        let div = document.createElement('div');
+        let input = document.createElement('input');
+        let deleteBtn = document.createElement('button');
+        input.setAttribute('type', 'file');
+        input.setAttribute('name', 'uploadFile');
+        deleteBtn.setAttribute('id', 'deleteBtn');
+        deleteBtn.append('삭제');
+        deleteBtn.onclick = function (){
+            // div.remove();
+            this.parentElement.remove();
+            return false;
+        }
+
+        div.appendChild(input);
+        div.appendChild(deleteBtn);
+        document.getElementById('divFiles').appendChild(div);
+        return false;
+    }
+
+</script>
 
 <a href="<%=request.getContextPath()%>/chat/delete?no=<%=chatRoomDTO.getChatRoomNo()%>">[채팅방 삭제하기]</a>
 <a href="<%=request.getContextPath()%>/chat/update?no=<%=chatRoomDTO.getChatRoomNo()%>">[채팅방 수정하기]</a><br>

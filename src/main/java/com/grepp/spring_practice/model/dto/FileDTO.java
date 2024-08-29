@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FIleDTO {
+public class FileDTO {
     private int fileNo;
     private int chatNo;
     private String originalName;
