@@ -14,6 +14,7 @@
 </head>
 <body>
 <%@ include file="common/header.jsp"%>
+<%@ include file="common/alert.jsp"%>
 
 <%
     ChatRoomDTO chatRoomDTO = (ChatRoomDTO) request.getAttribute("chatRoom");
@@ -65,7 +66,8 @@
     <input type="submit" value="전송">
 </form>
 
-<a href="#">[수정하기]</a>
+<a href="<%=request.getContextPath()%>/chat/delete?no=<%=chatRoomDTO.getChatRoomNo()%>">[채팅방 삭제하기]</a>
+<a href="<%=request.getContextPath()%>/chat/update?no=<%=chatRoomDTO.getChatRoomNo()%>">[채팅방 수정하기]</a><br>
 <a href="<%=request.getContextPath()%>/chat/list">[게시판 목록으로]</a>
 
 

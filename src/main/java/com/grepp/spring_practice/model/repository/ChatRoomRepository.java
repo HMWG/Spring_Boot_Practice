@@ -15,4 +15,6 @@ public interface ChatRoomRepository {
     List<ChatRoomDTO> selectByUserId(@Param("sr")int startRow, @Param("cnt")int count, @Param("id")int id) throws SQLException;
     int selectCountByUserId(int id) throws SQLException;
     ChatRoomDTO selectByChatRoomId(int id) throws SQLException;
+    List<ChatRoomDTO> selectAll(@Param("sr")int startRow, @Param("cnt")int count) throws SQLException;
+    int selectCountAll() throws SQLException;
 }

@@ -11,10 +11,16 @@
     <title>Title</title>
 </head>
 <body>
+<%
+    String msg = (String) request.getAttribute("msg");
+    if(msg!=null && !msg.isEmpty()){
+%>
 <script>
-    alert('<%=request.getAttribute("msg")%>');
-    location.href = '<%=request.getAttribute("path")%>'; // 주소표시줄에 넣어서 이동시킬 경로
+    alert('<%=msg%>');
 </script>
+<%
+    }
+%>
 
 </body>
 </html>

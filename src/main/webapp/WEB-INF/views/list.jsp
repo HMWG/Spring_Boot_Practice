@@ -11,10 +11,18 @@
 <html>
 <head>
     <title>게시판목록</title>
+
 </head>
 <body>
 <%@ include file="common/header.jsp"%>
-<a href="<%=request.getContextPath()%>/chat/create">[채팅방 만들기]</a><br>
+<%@ include file="common/alert.jsp"%>
+<%
+    if(session.getAttribute("loginNo")!=null){
+%><a href="<%=request.getContextPath()%>/chat/create">[채팅방 만들기]</a><br>
+<%
+    }
+%>
+
 <table border="1">
     <%
         Map<String, Object> pageData = (Map<String, Object>) request.getAttribute("pageData");
@@ -55,6 +63,5 @@
         </td>
     </tr>
 </table>
-
 </body>
 </html>

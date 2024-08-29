@@ -15,7 +15,7 @@
 <br>
 <%
     String action = (String) request.getAttribute("action");
-    String no = (String) request.getAttribute("no");
+    Integer no = (Integer) request.getAttribute("no");
 %>
 <form action="<%=request.getContextPath()%>/chat/<%=action%><% if(action.equals("update")) { %>?no=<%=no%><% } %>" method="post" enctype="multipart/form-data">
     채팅방 이름 : <input type="text" name="name"><br>

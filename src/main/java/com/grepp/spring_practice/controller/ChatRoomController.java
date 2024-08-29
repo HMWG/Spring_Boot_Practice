@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 
@@ -39,18 +40,53 @@ public class ChatRoomController {
     }
 
     @PostMapping("/create")
-    public ModelAndView create(ChatRoomDTO chatRoomDTO, HttpSession session) throws SQLException {
+    public ModelAndView create(ChatRoomDTO chatRoomDTO, HttpSession session, RedirectAttributes redirectAttributes) throws SQLException {
         Integer loginNo = (Integer) session.getAttribute("loginNo");
 
         if (chatRoomService.createChatRoom(chatRoomDTO, loginNo) == 0){
-            ModelAndView mav = new ModelAndView("alert"); // /WEB-INF/views/list.jsp
-            mav.addObject("msg", "write fail -> 이름을 작성해주세요");
-            mav.addObject("path", "list");
+            ModelAndView mav = new ModelAndView("redirect:list"); // /WEB-INF/views/list.jsp
+            redirectAttributes.addFlashAttribute("msg", "write fail -> 이름을 작성해주세요");
             return mav;
         }
-        ModelAndView mav = new ModelAndView("alert"); // /WEB-INF/views/list.jsp
-        mav.addObject("msg", "write success");
-        mav.addObject("path", "list");
+        ModelAndView mav = new ModelAndView("redirect:list"); // /WEB-INF/views/list.jsp
+        redirectAttributes.addFlashAttribute("msg", "write success");
         return mav;
     }
+
+    @GetMapping("/delete")
+    public ModelAndView delete(@RequestParam("no")int chatRoomNo, HttpSession session, RedirectAttributes redirectAttributes) throws SQLException {
+        Integer loginNo = (Integer) session.getAttribute("loginNo");
+        ModelAndView mav = new ModelAndView("redirect:list");
+        redirectAttributes.addFlashAttribute("msg", "채팅방 삭제 완료");
+        if(0==chatRoomService.deleteChatRoom(chatRoomNo, loginNo)){
+            redirectAttributes.addFlashAttribute("msg", "delete fail -> 권한이 없습니다.");
+        }
+        return mav;
+    }
+
+    @GetMapping("/update")
+    public ModelAndView update(@RequestParam("no")int chatRoomNo, HttpSession session, RedirectAttributes redirectAttributes) throws SQLException {
+        Integer loginNo = (Integer) session.getAttribute("loginNo");
+        ModelAndView mav = new ModelAndView("create_form");
+        if(!chatRoomService.checkCreatedBy(loginNo, chatRoomNo)){
+            redirectAttributes.addFlashAttribute("msg", "권한이 없습니다.");
+            mav.setViewName("redirect:/chatting/"+chatRoomNo);
+            return mav;
+        }
+        mav.addObject("action", "update");
+        mav.addObject("no",chatRoomNo);
+        return mav;
+    }
+
+    @PostMapping("/update")
+    public ModelAndView update(ChatRoomDTO chatRoomDTO, HttpSession session, @RequestParam("no")int chatRoomNo, RedirectAttributes redirectAttributes) throws SQLException {
+        ModelAndView mav = new ModelAndView("redirect:list");
+        Integer loginNo = (Integer) session.getAttribute("loginNo");
+        chatRoomDTO.setChatRoomNo(chatRoomNo);
+        if (chatRoomService.updateChatRoom(chatRoomDTO, loginNo) == 0){
+            redirectAttributes.addFlashAttribute("msg", "update fail -> 권한이 없습니다.");
+        }
+        return mav;
+    }
+
 }

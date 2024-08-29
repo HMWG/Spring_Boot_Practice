@@ -32,7 +32,6 @@ public class UserController {
         Map<String, String> map = userService.checkLogin(session);
         ModelAndView mav = new ModelAndView(map.get("view"));
         mav.addObject("msg", map.get("msg"));
-        mav.addObject("alert", map.get("alert"));
         return mav;
     }
 
@@ -42,7 +41,6 @@ public class UserController {
         Map<String, Object> map = userService.login(username, password, session, remLogin, remId);
         ModelAndView mav = new ModelAndView("main");
         mav.addObject("msg", map.get("msg"));
-        mav.addObject("alert", map.get("alert"));
         List<Cookie> cookies = (List<Cookie>) map.get("cookies");
         for(Cookie cookie : cookies) {
             resp.addCookie(cookie);
@@ -61,7 +59,6 @@ public class UserController {
         response.addCookie(cookie);
 
         mav.addObject("msg", "logout");
-        mav.addObject("alert", "true");
         return mav;
     }
 }

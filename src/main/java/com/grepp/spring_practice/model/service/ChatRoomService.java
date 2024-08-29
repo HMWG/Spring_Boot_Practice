@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +27,16 @@ public class ChatRoomService {
         this.userChatRoomRepository = userChatRoomRepository;
     }
 
-    public Map<String, Object> getList(int page, int id) throws SQLException {
-        int totalCount = chatRoomRepository.selectCountByUserId(id);
+    public Map<String, Object> getList(int page, Integer id) throws SQLException {
+
+        int totalCount;
+        if (id == null){
+            totalCount = chatRoomRepository.selectCountAll();
+        }
+        else {
+            totalCount = chatRoomRepository.selectCountByUserId(id);
+        }
+
         int totalPageCount = totalCount / COUNT_PER_PAGE; // (ex : 27/10 = 2.7 = 2)
         if(totalCount % COUNT_PER_PAGE > 0){ // 10개씩 2페이지하고 7개의 글이 남은 상태라 페이지 하나 늘려주기
             totalPageCount++; // 총 페이지는 3개
@@ -40,7 +49,13 @@ public class ChatRoomService {
         }
 
         int startRow = (page - 1) * COUNT_PER_PAGE; // 한 페이지당 보여질 줄의 갯수 반영해서 db에 모든 글들 다 읽어오지 않고 여기부터 끊어서 읽으라고 알려줄 수 있음
-        List<ChatRoomDTO> chatRoomList = chatRoomRepository.selectByUserId(startRow, COUNT_PER_PAGE, id);
+        List<ChatRoomDTO> chatRoomList;
+        if (id == null){
+            chatRoomList = chatRoomRepository.selectAll(startRow, COUNT_PER_PAGE);
+        }
+        else {
+            chatRoomList = chatRoomRepository.selectByUserId(startRow, COUNT_PER_PAGE, id);
+        }
         /////////////////////// service는 이렇게 여러가지 비즈니스 로직을 수행해서 데이터를 계산해냄
         Map<String, Object> resultData = new HashMap<>();
         resultData.put("page",page);
@@ -54,6 +69,7 @@ public class ChatRoomService {
 
     @Transactional
     public int createChatRoom(ChatRoomDTO chatRoomDTO, int userNo) throws SQLException {
+        chatRoomDTO.setCreatedBy(userNo);
         int a = chatRoomRepository.insert(chatRoomDTO);
         int b = userChatRoomRepository.insert(userNo, chatRoomDTO.getChatRoomNo());
 
@@ -67,7 +83,21 @@ public class ChatRoomService {
         return userChatRoomRepository.insert(userNo, chatRoomNo);
     }
 
-    public int deleteChatRoom(int chatRoomNo) throws SQLException {
-        return chatRoomRepository.delete(chatRoomNo);
+    public int deleteChatRoom(int chatRoomNo, int userNo) throws SQLException {
+        if (userNo == chatRoomRepository.selectByChatRoomId(chatRoomNo).getCreatedBy()){
+            return chatRoomRepository.delete(chatRoomNo);
+        }
+        return 0;
+    }
+
+    public int updateChatRoom(ChatRoomDTO chatRoomDTO, int userNo) throws SQLException {
+        if (userNo == chatRoomRepository.selectByChatRoomId(chatRoomDTO.getChatRoomNo()).getCreatedBy()){
+            return chatRoomRepository.update(chatRoomDTO);
+        }
+        return 0;
+    }
+
+    public boolean checkCreatedBy(int chatRoomNo, int userNo) throws SQLException {
+        return userNo == chatRoomRepository.selectByChatRoomId(chatRoomNo).getCreatedBy();
     }
 }

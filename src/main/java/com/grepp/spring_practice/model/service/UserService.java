@@ -44,10 +44,8 @@ public class UserService {
             map.put("cookies", cookies);
 
             map.put("msg", "로그인 완료되었습니다. 반갑습니다. " + username + "님");
-            map.put("alert", "true");
         } else {
             map.put("msg", "로그인 실패입니다. 아이디나 패스워드를 확인 해 주세요.");
-            map.put("alert", "true");
         }
         return map;
     }
@@ -60,7 +58,6 @@ public class UserService {
         } else{ // 너 이미 로그인 되어있어!
             map.put("msg", "이미 로그인 내역이 있습니다.");
             map.put("view", "main");
-            map.put("alert", "true");
         }
         return map;
     }

@@ -12,19 +12,9 @@
 </head>
 <body>
 <%@ include file="common/header.jsp"%>
+<%@ include file="common/alert.jsp"%>
 <h2>마이톡 시스템</h2>
 <a href="<%=request.getContextPath()%>/chat/create">[채팅방 만들기]</a>
 <a href="<%=request.getContextPath()%>/chat/list">[채팅방 목록으로]</a>
-<%
-    String alert = (String) request.getAttribute("alert");
-    String msg = (String) request.getAttribute("msg");
-    if(alert!=null && alert.equals("true")){
-%>
-<script>
-    alert(<%=msg%>);
-</script>
-<%
-    }
-%>
 </body>
 </html>

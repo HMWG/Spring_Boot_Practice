@@ -3,15 +3,15 @@
 <mapper namespace="com.grepp.spring_practice.model.repository.ChatRoomRepository">
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="chat_room_no" keyProperty="chatRoomNo">
-        INSERT INTO chat_room(name, description) values (#{name}, #{description})
+        INSERT INTO chat_room(name, description, created_by) values (#{name}, #{description}, #{createdBy})
     </insert>
     <update id="update">
-        UPDATE chat_room set
+        UPDATE chat_room
         <set>
-            <if test="name != null">
+            <if test='name != null and !name.equals("")'>
                 NAME = #{name},
             </if>
-            <if test="description != null">
+            <if test='description != null and !description.equals("")'>
                 DESCRIPTION = #{description},
             </if>
         </set>
@@ -23,7 +23,7 @@
         DELETE FROM chat_room where chat_room_no = #{id}
     </delete>
     <select id="selectByUserId" resultMap="r">
-        SELECT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at
+        SELECT DISTINCT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at, chat_room.created_by
         from chat_room join talk.user_chat_room ucr on chat_room.chat_room_no = ucr.chat_room_no
         where user_no = #{id}
         ORDER BY created_at DESC
@@ -35,13 +35,24 @@
         where user_no = #{id}
     </select>
     <select id="selectByChatRoomId" resultMap="r">
-        SELECT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at
+        SELECT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at, chat_room.created_by
         from chat_room
         where chat_room_no = #{id}
+    </select>
+    <select id="selectAll" resultMap="r">
+        SELECT DISTINCT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at, chat_room.created_by
+        from chat_room join talk.user_chat_room ucr on chat_room.chat_room_no = ucr.chat_room_no
+        ORDER BY created_at DESC
+        LIMIT #{sr}, #{cnt}
+    </select>
+    <select id="selectCountAll" resultType="java.lang.Integer">
+        SELECT count(*)
+        from chat_room join talk.user_chat_room ucr on chat_room.chat_room_no = ucr.chat_room_no
     </select>
 
     <resultMap id="r" type="com.grepp.spring_practice.model.dto.ChatRoomDTO">
         <result property="chatRoomNo" column="chat_room_no"/>
         <result property="createdAt" column="created_at"/>
+        <result property="createdBy" column="created_by"/>
     </resultMap>
 </mapper>
