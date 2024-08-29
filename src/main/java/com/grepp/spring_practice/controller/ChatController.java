@@ -50,7 +50,6 @@ public class ChatController {
 
         try {
             List<FileDTO> saveFiles = saveFiles(uploadFile);
-            System.out.println("파일 저장 완료 : " + saveFiles);
             chatService.saveFileInfos(saveFiles, chatDTO.getChatNo());
         } catch (IOException e) {
             e.printStackTrace();

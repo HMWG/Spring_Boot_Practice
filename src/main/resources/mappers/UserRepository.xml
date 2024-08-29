@@ -9,4 +9,7 @@
         SELECT user.user_no as userNo, user.username, user.password from user
         where username = #{username} and password = #{password}
     </select>
+    <select id="findAllUsers" resultType="com.grepp.spring_practice.model.dto.UserDTO">
+        SELECT user.user_no as userNo, user.username, user.password from user
+    </select>
 </mapper>

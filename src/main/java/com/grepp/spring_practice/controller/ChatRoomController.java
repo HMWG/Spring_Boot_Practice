@@ -2,6 +2,7 @@ package com.grepp.spring_practice.controller;
 
 import com.grepp.spring_practice.model.dto.ChatRoomDTO;
 import com.grepp.spring_practice.model.service.ChatRoomService;
+import com.grepp.spring_practice.model.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,12 @@ import java.sql.SQLException;
 @RequestMapping("/chat")
 public class ChatRoomController {
     ChatRoomService chatRoomService;
+    UserService userService;
 
     @Autowired
-    public ChatRoomController(ChatRoomService chatRoomService) {
+    public ChatRoomController(ChatRoomService chatRoomService, UserService userService) {
         this.chatRoomService = chatRoomService;
+        this.userService = userService;
     }
 
     @GetMapping("/list")
@@ -59,6 +62,7 @@ public class ChatRoomController {
         ModelAndView mav = new ModelAndView("redirect:list");
         redirectAttributes.addFlashAttribute("msg", "채팅방 삭제 완료");
         if(0==chatRoomService.deleteChatRoom(chatRoomNo, loginNo)){
+            mav.setViewName("redirect:/chatting/"+chatRoomNo);
             redirectAttributes.addFlashAttribute("msg", "delete fail -> 권한이 없습니다.");
         }
         return mav;
@@ -89,4 +93,21 @@ public class ChatRoomController {
         return mav;
     }
 
+    @GetMapping("/inviteForm")
+    public ModelAndView inviteForm(@RequestParam("no")int chatRoomNo) throws SQLException {
+        ModelAndView mav = new ModelAndView("invite_form");
+        mav.addObject("userList", userService.getUsers());
+        mav.addObject("no",chatRoomNo);
+        return mav;
+    }
+
+    @GetMapping("/invite")
+    public ModelAndView invite(@RequestParam("chatRoomNo")int chatRoomNo, @RequestParam("userNo")int userNo, RedirectAttributes redirectAttributes) throws SQLException {
+        ModelAndView mav = new ModelAndView("redirect:/chatting/"+chatRoomNo);
+        redirectAttributes.addFlashAttribute("msg", "초대 완료");
+        if(0 == chatRoomService.inviteChatRoom(chatRoomNo, userNo)){
+            redirectAttributes.addFlashAttribute("msg", "초대 실패");
+        }
+        return mav;
+    }
 }

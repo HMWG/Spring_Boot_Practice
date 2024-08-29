@@ -79,7 +79,7 @@ public class ChatRoomService {
         return 0;
     }
 
-    public int inviteChatRoom(int userNo, int chatRoomNo){
+    public int inviteChatRoom(int chatRoomNo, int userNo){
         return userChatRoomRepository.insert(userNo, chatRoomNo);
     }
 

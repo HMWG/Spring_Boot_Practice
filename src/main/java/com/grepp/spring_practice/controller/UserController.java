@@ -1,5 +1,6 @@
 package com.grepp.spring_practice.controller;
 
+import com.grepp.spring_practice.model.dto.UserDTO;
 import com.grepp.spring_practice.model.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,4 +62,25 @@ public class UserController {
         mav.addObject("msg", "logout");
         return mav;
     }
+
+    @GetMapping("/join")
+    public ModelAndView join() {
+        ModelAndView mav = new ModelAndView("join_form");
+        return mav;
+    }
+
+    @PostMapping("/join")
+    public ModelAndView joinUser(@RequestParam("username") String username, @RequestParam("password") String password) {
+        ModelAndView mav = new ModelAndView("main");
+        mav.addObject("msg", "회원가입 완료");
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(password);
+
+        if(userService.joinUser(userDTO) == 0){
+            mav.addObject("msg", "회원가입 실패 -> 아이디가 중복됐거나 회원가입할 수 없습니다");
+        }
+        return mav;
+    }
+
 }

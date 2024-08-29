@@ -61,4 +61,12 @@ public class UserService {
         }
         return map;
     }
+
+    public List<UserDTO> getUsers() {
+        return userRepository.findAllUsers();
+    }
+
+    public int joinUser(UserDTO user) {
+        return userRepository.addUser(user);
+    }
 }

@@ -177,6 +177,7 @@
     <a href="<%=request.getContextPath()%>/chat/delete?no=<%=chatRoomDTO.getChatRoomNo()%>">채팅방 삭제하기</a>
     <a href="<%=request.getContextPath()%>/chat/update?no=<%=chatRoomDTO.getChatRoomNo()%>">채팅방 수정하기</a><br>
     <a href="<%=request.getContextPath()%>/chat/list">게시판 목록으로</a>
+    <a href="<%=request.getContextPath()%>/chat/inviteForm?no=<%=chatRoomDTO.getChatRoomNo()%>">초대하기</a>
 </div>
 
 <script>

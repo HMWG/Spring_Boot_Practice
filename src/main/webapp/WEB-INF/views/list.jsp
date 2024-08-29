@@ -84,6 +84,7 @@
     %>
     <div class="create-chat-link">
         <a href="<%=request.getContextPath()%>/chat/create">채팅방 만들기</a>
+        <a href="<%=request.getContextPath()%>/main">메인으로 가기</a>
     </div>
     <%
         }
