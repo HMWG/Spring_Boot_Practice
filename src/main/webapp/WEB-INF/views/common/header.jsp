@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-  String loginId = (String)session.getAttribute("loginId");
+  String loginId = (String)session.getAttribute("loginUsername");
   if(loginId!=null){
 %>
   <%=loginId%>님 로그인 중이시네요. 환영합니다.<br/>

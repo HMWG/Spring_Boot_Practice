@@ -2,4 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grepp.spring_practice.model.repository.ChatRoomRepository">
 
+    <insert id="insert" useGeneratedKeys="true" keyColumn="chat_room_no" keyProperty="chatRoomNo">
+        INSERT INTO chat_room(name, description) values (#{name}, #{description})
+    </insert>
+    <update id="update">
+        UPDATE chat_room set
+        <set>
+            <if test="name != null">
+                NAME = #{name},
+            </if>
+            <if test="description != null">
+                DESCRIPTION = #{description},
+            </if>
+        </set>
+        <trim prefixOverrides=",">
+            WHERE chat_room_no = #{chatRoomNo}
+        </trim>
+    </update>
+    <delete id="delete">
+        DELETE FROM chat_room where chat_room_no = #{id}
+    </delete>
+    <select id="selectByUserId" resultMap="r">
+        SELECT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at
+        from chat_room join talk.user_chat_room ucr on chat_room.chat_room_no = ucr.chat_room_no
+        where user_no = #{id}
+        ORDER BY created_at DESC
+        LIMIT #{sr}, #{cnt}
+    </select>
+    <select id="selectCountByUserId" resultType="java.lang.Integer">
+        SELECT count(*)
+        from chat_room join talk.user_chat_room ucr on chat_room.chat_room_no = ucr.chat_room_no
+        where user_no = #{id}
+    </select>
+    <select id="selectByChatRoomId" resultMap="r">
+        SELECT chat_room.chat_room_no, chat_room.NAME, chat_room.DESCRIPTION, chat_room.created_at
+        from chat_room
+        where chat_room_no = #{id}
+    </select>
+
+    <resultMap id="r" type="com.grepp.spring_practice.model.dto.ChatRoomDTO">
+        <result property="chatRoomNo" column="chat_room_no"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
 </mapper>

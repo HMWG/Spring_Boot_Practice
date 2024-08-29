@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grepp.spring_practice.model.repository.UserChatRoomRepository">
 
+    <insert id="insert">
+        INSERT INTO user_chat_room(user_no, chat_room_no) VALUES (#{userNo}, #{chatRoomNo});
+    </insert>
+    <select id="findByUserNoAndChatRoomNo" resultType="com.grepp.spring_practice.model.dto.UserChatRoomDTO">
+        SELECT * from user_chat_room
+        where user_no = #{userNo} and chat_room_no = #{chatRoomNo}
+    </select>
+
+
 </mapper>

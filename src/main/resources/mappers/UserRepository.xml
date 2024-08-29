@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grepp.spring_practice.model.repository.UserRepository">
 
+    <insert id="addUser">
+        INSERT INTO user(username, password) VALUES (#{username}, #{password})
+    </insert>
+    <select id="findByUsernameAndPassword" resultType="com.grepp.spring_practice.model.dto.UserDTO">
+        SELECT user.user_no as userNo, user.username, user.password from user
+        where username = #{username} and password = #{password}
+    </select>
 </mapper>
